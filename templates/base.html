@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paira — Pakistan's Fashion Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #E8470A;
+            --primary-dark: #C33A06;
+            --primary-light: #FF6B35;
+            --dark: #1A1A2E;
+            --mid: #2D2D44;
+            --text: #2C2C2C;
+            --muted: #777;
+            --light: #F8F6F3;
+            --white: #FFFFFF;
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+        body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--text); }
+
+        .navbar {
+            background: var(--dark); padding: 0 40px;
+            display: flex; align-items: center; gap: 24px;
+            height: 64px; position: sticky; top: 0; z-index: 200;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px; font-weight: 900;
+            color: white; text-decoration: none; white-space: nowrap;
+        }
+        .brand span { color: var(--primary-light); }
+        .nav-links { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+        .nav-links a {
+            color: rgba(255,255,255,0.8); text-decoration: none;
+            padding: 7px 14px; border-radius: 6px; font-size: 14px;
+            font-weight: 500; transition: all 0.2s; background: none;
+        }
+        .nav-links a:hover { background: rgba(255,255,255,0.1); color: white; }
+        .nav-btn-primary {
+            background: var(--primary) !important; color: white !important;
+            border-radius: 6px; padding: 7px 16px !important; font-weight: 600 !important;
+        }
+        .nav-btn-primary:hover { background: var(--primary-dark) !important; }
+        .nav-welcome { color: rgba(255,255,255,0.6); font-size: 13px; padding: 0 8px; }
+
+        .cart-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        .cart-badge {
+            position: absolute; top: -6px; right: -6px;
+            background: #22c55e; color: white;
+            font-size: 10px; font-weight: 700;
+            min-width: 18px; height: 18px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 4px; line-height: 1;
+            border: 2px solid var(--dark); pointer-events: none;
+        }
+
+        .nav-search-form {
+            display: flex; border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 8px; overflow: hidden; flex: 1; max-width: 380px;
+        }
+        .nav-search-form input {
+            flex: 1; border: none; outline: none; padding: 7px 12px;
+            font-family: 'DM Sans', sans-serif; font-size: 13px;
+            background: rgba(255,255,255,0.1); color: white;
+        }
+        .nav-search-form input::placeholder { color: rgba(255,255,255,0.5); }
+        .nav-search-form input:focus { background: rgba(255,255,255,0.18); }
+        .nav-search-form button {
+            background: var(--primary); border: none; padding: 7px 13px;
+            color: white; cursor: pointer; font-size: 14px; transition: background 0.2s;
+        }
+        .nav-search-form button:hover { background: var(--primary-dark); }
+
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px; font-weight: 700; color: var(--dark); margin-bottom: 24px;
+        }
+        .page-title span { color: var(--primary); }
+
+        table { width: 100%; border-collapse: collapse; background: white;
+                border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow); }
+        th { background: var(--dark); color: white; padding: 14px 16px; font-size: 13px;
+             font-weight: 600; text-align: center; letter-spacing: 0.3px; }
+        td { padding: 14px 16px; border-bottom: 1px solid #f0ede8; text-align: center; font-size: 14px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fdf9f7; }
+
+        .badge { display: inline-block; padding: 3px 12px; border-radius: 20px;
+                 font-size: 12px; font-weight: 600; background: rgba(232,71,10,0.12); color: var(--primary); }
+        .badge-green { background: rgba(34,197,94,0.12); color: #16a34a; }
+
+        .btn { display: inline-block; padding: 9px 20px; border-radius: 7px; font-size: 14px;
+               font-weight: 600; text-decoration: none; cursor: pointer; border: none;
+               transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-dark { background: var(--dark); color: white; }
+        .btn-dark:hover { background: var(--mid); }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-danger:hover { background: #b02a37; }
+        .btn-gray { background: #e5e7eb; color: var(--text); }
+        .btn-gray:hover { background: #d1d5db; }
+        .btn-sm { padding: 5px 12px; font-size: 12px; }
+        a.btn-danger { background: #dc3545; color: white; }
+        a.btn-danger:hover { background: #b02a37; }
+
+        .form-card { background: white; border-radius: 14px; padding: 32px;
+                     box-shadow: var(--card-shadow); max-width: 520px; margin: 0 auto; }
+        .form-card h2 { font-family: 'Playfair Display', serif; font-size: 26px;
+                         color: var(--dark); margin-bottom: 24px; text-align: center; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600;
+                            color: var(--text); margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb;
+                        border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+                        transition: border-color 0.2s; outline: none; }
+        .form-control:focus { border-color: var(--primary); }
+        .form-box input, .form-box select, .form-box textarea {
+            width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb;
+            border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+            margin-bottom: 4px; outline: none; box-sizing: border-box; }
+        .form-box input:focus, .form-box select:focus, .form-box textarea:focus { border-color: var(--primary); }
+        .form-box { background: white; border-radius: 14px; padding: 28px; box-shadow: var(--card-shadow); }
+        .error { color: #dc3545; font-size: 13px; font-weight: 600; margin-bottom: 12px; display: block; }
+
+        .auth-box { background: white; border-radius: 16px; padding: 40px;
+                    box-shadow: 0 8px 40px rgba(0,0,0,0.12); max-width: 420px; margin: 60px auto; }
+        .auth-box h2 { font-family: 'Playfair Display', serif; font-size: 28px;
+                        color: var(--dark); margin-bottom: 24px; text-align: center; }
+        .auth-box input, .auth-box select { width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb;
+            border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+            margin-bottom: 12px; outline: none; box-sizing: border-box; }
+        .auth-box input:focus, .auth-box select:focus { border-color: var(--primary); }
+        .auth-box button { width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+            cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 4px; }
+        .auth-box button:hover { background: var(--primary-dark); }
+        .auth-box p { text-align: center; margin-top: 16px; font-size: 14px; color: var(--muted); }
+        .auth-box a.link { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        .stats-bar { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px 32px;
+                     box-shadow: var(--card-shadow); flex: 1; min-width: 160px; text-align: center; }
+        .stat-card h3 { font-family: 'Playfair Display', serif; font-size: 28px;
+                         color: var(--primary); margin-bottom: 4px; }
+        .stat-card p { color: var(--muted); font-size: 13px; }
+
+        .success-box { background: white; border-radius: 16px; padding: 48px;
+                       box-shadow: var(--card-shadow); text-align: center; max-width: 480px; margin: 40px auto; }
+        .success-box h2 { font-family: 'Playfair Display', serif; font-size: 28px;
+                           color: var(--dark); margin-bottom: 16px; }
+
+        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+        .btn-filter { padding: 7px 18px; border-radius: 20px; border: 2px solid #ddd;
+                      background: white; color: var(--text); font-size: 13px; font-weight: 500;
+                      text-decoration: none; transition: all 0.2s; }
+        .btn-filter:hover, .btn-filter.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+        .detail-box { background: white; border-radius: 16px; padding: 32px;
+                      box-shadow: var(--card-shadow); max-width: 680px; margin: 0 auto 32px; }
+
+        .popup-overlay { display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6); z-index: 1000;
+            align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .popup-overlay.active { display: flex; }
+        .popup-box { background: white; border-radius: 20px; padding: 40px;
+            width: 100%; max-width: 400px; position: relative;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.25); animation: popIn 0.25s ease; }
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .popup-close { position: absolute; top: 16px; right: 20px; font-size: 22px;
+            cursor: pointer; color: var(--muted); background: none; border: none; line-height: 1; }
+        .popup-close:hover { color: var(--text); }
+        .popup-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 900;
+            color: var(--dark); text-align: center; margin-bottom: 6px; }
+        .popup-logo span { color: var(--primary); }
+        .popup-subtitle { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+        .popup-box input { width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb;
+            border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+            margin-bottom: 12px; outline: none; box-sizing: border-box; }
+        .popup-box input:focus { border-color: var(--primary); }
+        .popup-btn { width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 8px; font-size: 15px; font-weight: 600;
+            cursor: pointer; font-family: 'DM Sans', sans-serif; margin-top: 4px; }
+        .popup-btn:hover { background: var(--primary-dark); }
+        .popup-error { color: #dc3545; font-size: 13px; margin-bottom: 10px; display: none; }
+        .popup-footer { text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted); }
+        .popup-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
+
+        a { text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0 16px; }
+            .page-container { padding: 20px 16px; }
+            .stats-bar { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand">Pair<span>a</span></a>
+    <div class="nav-links">
+        {% if session.get('role') == 'Customer' %}
+            <a href="/products">🛍️ Shop</a>
+            <form class="nav-search-form" action="/search" method="GET">
+                <input type="text" name="q" placeholder="Search products..."
+                       value="{{ request.args.get('q', '') }}" autocomplete="off">
+                <button type="submit">🔍</button>
+            </form>
+            <a href="/cart" class="cart-link">
+                🛒 Cart
+                {% if cart_count and cart_count > 0 %}
+                    <span class="cart-badge">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+            <a href="/orders">📦 Orders</a>
+            <span class="nav-welcome">Hi, {{ session.get('name') }}</span>
+            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+        {% elif session.get('role') == 'Seller' %}
+            <a href="/seller">Dashboard</a>
+            <a href="/add_product">+ Add Product</a>
+            <span class="nav-welcome">Hi, {{ session.get('name') }}</span>
+            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+        {% elif session.get('role') == 'Admin' %}
+            <a href="/admin">⚙️ Admin Panel</a>
+            <span class="nav-welcome">Hi, {{ session.get('name') }}</span>
+            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+        {% else %}
+            <a href="/">🏠 Home</a>
+            <a href="/register?role=Seller">🏪 Sell on Paira</a>
+            <a href="/login">Login</a>
+            <a href="/register" class="btn btn-primary btn-sm nav-btn-primary">Sign Up</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="popup-overlay" id="loginPopup">
+    <div class="popup-box">
+        <button class="popup-close" onclick="closePopup()">✕</button>
+        <div class="popup-logo">Pair<span>a</span></div>
+        <div class="popup-subtitle">Login to continue shopping</div>
+        <div class="popup-error" id="popupError"></div>
+        <input type="email"    id="popupEmail"    placeholder="Email address">
+        <input type="password" id="popupPassword" placeholder="Password">
+        <input type="hidden"   id="popupNext"     value="">
+        <button class="popup-btn" onclick="doPopupLogin()">Login</button>
+        <div class="popup-footer">
+            No account? <a href="/register">Sign up free</a> &nbsp;·&nbsp;
+            <a href="/login">Full login page</a>
+        </div>
+    </div>
+</div>
+
+<div class="page-container">
+    {% block content %}{% endblock %}
+</div>
+
+<footer style="background:var(--dark); color:#9BA3B8; padding:32px 40px; text-align:center; margin-top:60px;">
+    <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:white; margin-bottom:8px;">
+        Pair<span style="color:var(--primary-light);">a</span>
+    </div>
+    <p style="font-size:13px;">Pakistan's Fashion Marketplace · Bags · Shoes · Accessories</p>
+    <p style="font-size:12px; margin-top:12px; opacity:0.5;">© 2026 Paira. All rights reserved.</p>
+</footer>
+
+<script>
+function openLoginPopup(nextUrl) {
+    document.getElementById('popupNext').value = nextUrl || '';
+    document.getElementById('loginPopup').classList.add('active');
+    document.getElementById('popupEmail').focus();
+}
+function closePopup() {
+    document.getElementById('loginPopup').classList.remove('active');
+    document.getElementById('popupError').style.display = 'none';
+}
+document.getElementById('loginPopup').addEventListener('click', function(e) {
+    if (e.target === this) closePopup();
+});
+function doPopupLogin() {
+    const email    = document.getElementById('popupEmail').value;
+    const password = document.getElementById('popupPassword').value;
+    const next     = document.getElementById('popupNext').value;
+    const errDiv   = document.getElementById('popupError');
+    errDiv.style.display = 'none';
+    const form = new FormData();
+    form.append('email', email);
+    form.append('password', password);
+    form.append('next', next);
+    fetch('/login', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: form
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.redirect) { window.location.href = data.redirect; }
+        else if (data.error) { errDiv.textContent = data.error; errDiv.style.display = 'block'; }
+    })
+    .catch(() => {
+        errDiv.textContent = 'Something went wrong. Try again.';
+        errDiv.style.display = 'block';
+    });
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.getElementById('loginPopup').classList.contains('active')) {
+        doPopupLogin();
+    }
+});
+</script>
+
+{% if session.get('role') == 'Customer' %}
+<style>
+  #chatToggle {
+    position: fixed; bottom: 28px; right: 28px; z-index: 1100;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--primary); color: white; border: none; cursor: pointer;
+    font-size: 26px; box-shadow: 0 4px 20px rgba(232,71,10,0.45);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+  }
+  #chatToggle:hover { background: var(--primary-dark); transform: scale(1.08); }
+
+  #chatWindow {
+    position: fixed; bottom: 96px; right: 28px; z-index: 1100;
+    width: 340px; max-height: 500px; background: white; border-radius: 18px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+    display: none; flex-direction: column; overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+  }
+  #chatWindow.open { display: flex; animation: chatSlideIn 0.22s ease; }
+  @keyframes chatSlideIn {
+    from { opacity:0; transform: translateY(16px) scale(0.96); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+  .chat-header { background: var(--dark); color: white;
+    padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
+  .chat-header-avatar { width: 34px; height: 34px; border-radius: 50%;
+    background: var(--primary); display: flex; align-items: center;
+    justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .chat-header-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
+  .chat-header-info p  { font-size: 11px; color: #9BA3B8; margin: 2px 0 0; }
+  .chat-close-btn { margin-left: auto; background: none; border: none;
+    color: #9BA3B8; font-size: 18px; cursor: pointer; line-height: 1; }
+  .chat-close-btn:hover { color: white; }
+
+  #chatMessages { flex: 1; overflow-y: auto; padding: 14px 14px 8px;
+    display: flex; flex-direction: column; gap: 8px; background: #faf9f7; }
+  #chatMessages::-webkit-scrollbar { width: 4px; }
+  #chatMessages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+  .chat-msg { max-width: 82%; padding: 9px 13px; border-radius: 14px;
+    font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .chat-msg.bot { background: white; color: var(--text);
+    border: 1px solid #ede9e4; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .chat-msg.user { background: var(--primary); color: white;
+    align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chat-msg.bot a  { color: var(--primary); text-decoration: underline; font-weight: 600; }
+  .chat-msg.user a { color: white; text-decoration: underline; }
+
+  .chat-typing { align-self: flex-start; padding: 10px 14px; background: white;
+    border: 1px solid #ede9e4; border-radius: 14px; border-bottom-left-radius: 4px;
+    display: flex; gap: 4px; align-items: center; }
+  .chat-typing span { width: 7px; height: 7px; background: #bbb;
+    border-radius: 50%; animation: typingBounce 1.2s infinite; }
+  .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); }
+    30%          { transform: translateY(-5px); }
+  }
+
+  .chat-quick-replies { padding: 6px 14px 4px; display: flex; flex-wrap: wrap;
+    gap: 6px; background: #faf9f7; }
+  .chat-quick-btn { background: white; border: 1.5px solid #e0dbd5; color: var(--text);
+    border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.18s; }
+  .chat-quick-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+  .chat-input-bar { display: flex; padding: 10px 12px; gap: 8px;
+    border-top: 1px solid #ede9e4; background: white; }
+  #chatInput { flex: 1; border: 1.5px solid #e5e7eb; border-radius: 8px;
+    padding: 8px 12px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.2s; }
+  #chatInput:focus { border-color: var(--primary); }
+  #chatSendBtn { background: var(--primary); color: white; border: none;
+    border-radius: 8px; padding: 8px 14px; font-size: 15px;
+    cursor: pointer; transition: background 0.2s; }
+  #chatSendBtn:hover { background: var(--primary-dark); }
+
+  @media (max-width: 480px) {
+    #chatWindow { width: calc(100vw - 24px); right: 12px; bottom: 80px; }
+    #chatToggle { right: 16px; bottom: 16px; }
+  }
+</style>
+
+<button id="chatToggle" onclick="toggleChat()" title="Chat with Paira Assistant">💬</button>
+
+<div id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-avatar">🛍️</div>
+    <div class="chat-header-info">
+      <h4>Paira Assistant</h4>
+      <p>Ask me anything about products!</p>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+  </div>
+  <div id="chatMessages"></div>
+  <div class="chat-quick-replies">
+    <button class="chat-quick-btn" onclick="sendQuick('bags')">👜 Bags</button>
+    <button class="chat-quick-btn" onclick="sendQuick('shoes')">👟 Shoes</button>
+    <button class="chat-quick-btn" onclick="sendQuick('cheapest')">💰 Cheapest</button>
+    <button class="chat-quick-btn" onclick="sendQuick('top rated')">⭐ Top Rated</button>
+  </div>
+  <div class="chat-input-bar">
+    <input type="text" id="chatInput" placeholder="Ask about products..." autocomplete="off"
+           onkeydown="if(event.key==='Enter') sendChat()">
+    <button id="chatSendBtn" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var chatOpen  = false;
+  var firstOpen = true;
+
+  window.toggleChat = function() {
+    chatOpen = !chatOpen;
+    var win = document.getElementById('chatWindow');
+    var btn = document.getElementById('chatToggle');
+    if (chatOpen) {
+      win.classList.add('open');
+      btn.textContent = '✕'; btn.style.fontSize = '20px';
+      if (firstOpen) {
+        firstOpen = false;
+        appendBot("Hi {{ session.get('name', '') }}! 👋 Welcome to <strong>Paira</strong>!\n\nI can help you find bags, shoes & accessories. Try asking:\n• <em>Bags under Rs 3000</em>\n• <em>Top rated shoes</em>\n• <em>Show cheapest products</em>");
+      }
+      setTimeout(function() { document.getElementById('chatInput').focus(); }, 120);
+    } else {
+      win.classList.remove('open');
+      btn.textContent = '💬'; btn.style.fontSize = '26px';
+    }
+  };
+
+  window.sendQuick = function(text) {
+    document.getElementById('chatInput').value = text;
+    sendChat();
+  };
+
+  window.sendChat = function() {
+    var input = document.getElementById('chatInput');
+    var msg   = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    appendUser(msg);
+    showTyping();
+    fetch('/chatbot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      removeTyping();
+      var reply = data.reply || "Sorry, I couldn't understand that.";
+      reply = reply.replace(/\[product_id:(\d+)\]/g,
+        '<a href="/product/$1" style="font-size:11px;">View &#8594;</a>');
+      appendBot(reply);
+    })
+    .catch(function() {
+      removeTyping();
+      appendBot("Oops! Something went wrong. Please try again.");
+    });
+  };
+
+  function appendUser(text) {
+    var div = document.createElement('div');
+    div.className = 'chat-msg user'; div.textContent = text;
+    getMessages().appendChild(div); scrollBottom();
+  }
+  function appendBot(html) {
+    var div = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.innerHTML = html.replace(/\n/g, '<br>');
+    getMessages().appendChild(div); scrollBottom();
+  }
+  function showTyping() {
+    var t = document.createElement('div');
+    t.className = 'chat-typing'; t.id = 'chatTyping';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    getMessages().appendChild(t); scrollBottom();
+  }
+  function removeTyping() { var t = document.getElementById('chatTyping'); if (t) t.remove(); }
+  function getMessages() { return document.getElementById('chatMessages'); }
+  function scrollBottom() { var el = getMessages(); el.scrollTop = el.scrollHeight; }
+})();
+</script>
+{% endif %}
+
+</body>
+</html>

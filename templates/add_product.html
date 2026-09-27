@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-card">
+    <h2>Add New Product</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" name="name" class="form-control" placeholder="e.g. Leather Handbag" required>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="Describe your product..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Price (Rs)</label>
+            <input type="number" name="price" class="form-control" placeholder="e.g. 2500" required step="0.01">
+        </div>
+        <div class="form-group">
+            <label>Stock Quantity</label>
+            <input type="number" name="stock" class="form-control" placeholder="e.g. 10" required>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <select name="category_id" class="form-control" required>
+                <option value="">-- Select Category --</option>
+                {% for cat in categories %}
+                    <option value="{{ cat[0] }}">{{ cat[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Product Image</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+        <div style="display:flex; gap:12px; margin-top:8px;">
+            <button type="submit" class="btn btn-primary">Add Product</button>
+            <a href="/seller" class="btn btn-gray">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

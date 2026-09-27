@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paira — Pakistan's Favourite Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary: #E8470A;
+            --primary-dark: #C33A06;
+            --primary-light: #FF6B35;
+            --dark: #1A1A2E;
+            --mid: #2D2D44;
+            --text: #2C2C2C;
+            --muted: #777;
+            --light: #F8F6F3;
+            --white: #FFFFFF;
+            --card-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --hover-shadow: 0 12px 40px rgba(232,71,10,0.18);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--light);
+            color: var(--text);
+        }
+
+        .topbar {
+            background: var(--dark);
+            color: #aaa;
+            font-size: 12px;
+            padding: 6px 40px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 24px;
+        }
+        .topbar a { color: #ccc; text-decoration: none; }
+        .topbar a:hover { color: var(--primary-light); }
+
+        .navbar {
+            background: var(--white);
+            padding: 14px 40px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--primary);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .brand span { color: var(--dark); }
+
+        .search-bar {
+            flex: 1;
+            display: flex;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 600px;
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 10px 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+        }
+        .search-bar button {
+            background: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .search-bar button:hover { background: var(--primary-dark); }
+
+        .nav-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+
+        .btn-login {
+            padding: 9px 22px;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-login:hover { background: var(--primary); color: white; }
+
+        .btn-signup {
+            padding: 9px 22px;
+            background: var(--primary);
+            color: white;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-signup:hover { background: var(--primary-dark); }
+
+        .btn-sell {
+            padding: 9px 22px;
+            background: var(--dark);
+            color: white;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-sell:hover { background: var(--mid); }
+
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #16213E 50%, #0F3460 100%);
+            padding: 70px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(232,71,10,0.15) 0%, transparent 70%);
+            top: -100px; right: 200px;
+            border-radius: 50%;
+        }
+
+        .hero-text { flex: 1; max-width: 520px; position: relative; z-index: 1; }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(232,71,10,0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary-light);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 54px;
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 18px;
+        }
+        .hero h1 span { color: var(--primary-light); }
+        .hero p {
+            color: #9BA3B8;
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn-hero-primary {
+            padding: 14px 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-hero-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-hero-secondary {
+            padding: 14px 32px;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-hero-secondary:hover { border-color: white; transform: translateY(-2px); }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 40px;
+        }
+        .stat { text-align: center; }
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+        .stat-label { font-size: 12px; color: #9BA3B8; margin-top: 2px; }
+
+        .hero-visual {
+            flex: 0 0 380px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+        .hero-card:hover { transform: translateY(-4px); }
+        .hero-card:first-child { grid-column: span 2; }
+        .hero-card .icon { font-size: 32px; margin-bottom: 8px; }
+        .hero-card h4 { color: white; font-size: 14px; font-weight: 600; }
+        .hero-card p { color: #9BA3B8; font-size: 12px; margin-top: 4px; }
+
+        .sell-banner {
+            background: linear-gradient(90deg, #FF6B35, #E8470A);
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .sell-banner-text { color: white; }
+        .sell-banner-text h3 { font-size: 18px; font-weight: 700; }
+        .sell-banner-text p { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+        .btn-sell-white {
+            padding: 10px 28px;
+            background: white;
+            color: var(--primary);
+            border-radius: 7px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .btn-sell-white:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+
+        .section { padding: 48px 40px; }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 24px;
+        }
+        .section-title span { color: var(--primary); }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+        .cat-btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: 2px solid #ddd;
+            background: white;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .cat-btn:hover, .cat-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .product-img-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f0ede8, #e8e4de);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .product-info { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+        .product-category {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        .product-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .product-seller { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+        .product-rating { font-size: 12px; color: #f59e0b; margin-bottom: 10px; }
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .btn-cart {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-cart:hover { background: var(--primary-dark); }
+        .out-of-stock {
+            background: #eee;
+            color: #999;
+            border-radius: 7px;
+            padding: 7px 14px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .features {
+            background: white;
+            padding: 36px 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .feature-icon {
+            width: 48px; height: 48px;
+            background: rgba(232,71,10,0.08);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .feature h4 { font-size: 14px; font-weight: 600; color: var(--dark); }
+        .feature p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+        .footer {
+            background: var(--dark);
+            color: #9BA3B8;
+            padding: 48px 40px 24px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 12px;
+        }
+        .footer-brand span { color: var(--primary); }
+        .footer p { font-size: 13px; line-height: 1.7; }
+        .footer h4 { color: white; font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+        .footer ul { list-style: none; }
+        .footer ul li { margin-bottom: 8px; }
+        .footer ul li a { color: #9BA3B8; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .footer ul li a:hover { color: var(--primary-light); }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 16px; gap: 12px; }
+            .hero { padding: 40px 16px; flex-direction: column; }
+            .hero h1 { font-size: 36px; }
+            .hero-visual { display: none; }
+            .section { padding: 32px 16px; }
+            .features { grid-template-columns: 1fr 1fr; padding: 24px 16px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .sell-banner { padding: 16px; flex-direction: column; text-align: center; }
+            .topbar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <a href="/register?role=Seller">Sell on Paira</a>
+    <a href="/login">Help & Support</a>
+    <a href="/login">Login</a>
+    <a href="/register">Sign Up</a>
+</div>
+
+<nav class="navbar">
+    <a href="/" class="brand">Paira</a>
+    <form class="search-bar" action="/search" method="GET">
+        <input type="text" name="q" placeholder="Search products, brands, categories..."
+               id="searchInput" autocomplete="off">
+        <button type="submit">🔍</button>
+    </form>
+    <div class="nav-actions">
+        <a href="/register?role=Seller" class="btn-sell">🏪 Sell on Paira</a>
+        <a href="/login" class="btn-login">Login</a>
+        <a href="/register" class="btn-signup">Sign Up</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-text">
+        <div class="hero-badge">✨ Pakistan's Fashion Marketplace</div>
+        <h1>Shop <span>Smart,</span><br>Live Better</h1>
+        <p>Discover thousands of products from trusted sellers across Pakistan. From fashion to electronics — find everything you need, all in one place.</p>
+        <div class="hero-btns">
+            <a href="#products" class="btn-hero-primary">🛍️ Shop Now</a>
+            <a href="/register?role=Seller" class="btn-hero-secondary">Start Selling →</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-num">500+</div>
+                <div class="stat-label">Products</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">100+</div>
+                <div class="stat-label">Sellers</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">1K+</div>
+                <div class="stat-label">Happy Buyers</div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="hero-card">
+            <div class="icon">🏷️</div>
+            <h4>Best Prices Guaranteed</h4>
+            <p>Compare from hundreds of sellers</p>
+        </div>
+        <div class="hero-card">
+            <div class="icon">🚚</div>
+            <h4>Fast Delivery</h4>
+            <p>Nationwide shipping</p>
+        </div>
+        <div class="hero-card">
+            <div class="icon">🔒</div>
+            <h4>Secure Payments</h4>
+            <p>100% safe checkout</p>
+        </div>
+    </div>
+</section>
+
+<div class="sell-banner">
+    <div class="sell-banner-text">
+        <h3>🏪 Want to sell your products?</h3>
+        <p>Join thousands of sellers already making money on Paira — it's free to start!</p>
+    </div>
+    <a href="/register?role=Seller" class="btn-sell-white">Start Selling for Free →</a>
+</div>
+
+<div class="features">
+    <div class="feature">
+        <div class="feature-icon">🚚</div>
+        <div>
+            <h4>Nationwide Delivery</h4>
+            <p>Delivered to your doorstep</p>
+        </div>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">✅</div>
+        <div>
+            <h4>Verified Sellers</h4>
+            <p>All sellers are verified</p>
+        </div>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">💳</div>
+        <div>
+            <h4>Easy Payments</h4>
+            <p>Cash on delivery available</p>
+        </div>
+    </div>
+    <div class="feature">
+        <div class="feature-icon">🎧</div>
+        <div>
+            <h4>24/7 Support</h4>
+            <p>Always here to help you</p>
+        </div>
+    </div>
+</div>
+
+<section class="section" id="products">
+    {% if search_query %}
+    <h2 class="section-title">Results for <span>"{{ search_query }}"</span></h2>
+    <p style="color:#777; font-size:14px; margin-bottom:20px;">
+        {{ products|length }} product(s) found &nbsp;·&nbsp;
+        <a href="/" style="color:var(--primary); font-weight:600; text-decoration:none;">✕ Clear search</a>
+    </p>
+    {% else %}
+    <h2 class="section-title">Explore <span>All Products</span></h2>
+    {% endif %}
+
+    <div class="categories">
+        <a href="/" class="cat-btn active" id="cat-all">All</a>
+        {% for cat in categories %}
+            <a href="/?category_id={{ cat[0] }}" class="cat-btn">{{ cat[1] }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="products-grid">
+        {% for p in products %}
+        <a href="/product/{{ p[0] }}" class="product-card">
+            {% if p[7] %}
+                <img src="{{ url_for('static', filename='uploads/' + p[7]) }}"
+                     class="product-img" alt="{{ p[1] }}">
+            {% else %}
+                <div class="product-img-placeholder">🛍️</div>
+            {% endif %}
+            <div class="product-info">
+                <div class="product-category">{{ p[4] }}</div>
+                <div class="product-name">{{ p[1] }}</div>
+                <div class="product-seller">by {{ p[5] }}</div>
+                <div class="product-rating">⭐ {{ p[6] }}</div>
+                <div class="product-footer">
+                    <div class="product-price">Rs {{ p[2] }}</div>
+                    {% if p[3] > 0 %}
+                        <a href="/add_to_cart/{{ p[0] }}" class="btn-cart"
+                           onclick="event.stopPropagation()">+ Cart</a>
+                    {% else %}
+                        <span class="out-of-stock">Out of Stock</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <p style="color:#999; grid-column:span 5; text-align:center; padding:40px;">
+            No products available yet.
+        </p>
+        {% endfor %}
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand">Paira</div>
+            <p>Pakistan's favourite fashion marketplace for bags, shoes and accessories.</p>
+        </div>
+        <div>
+            <h4>For Buyers</h4>
+            <ul>
+                <li><a href="/register">Create Account</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="#products">Browse Products</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>For Sellers</h4>
+            <ul>
+                <li><a href="/register?role=Seller">Start Selling</a></li>
+                <li><a href="/login">Seller Login</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Paira. All rights reserved. Made with ❤️ in Pakistan</p>
+    </div>
+</footer>
+
+<script>
+// Search is now handled server-side via /search route
+// Show search query in input if returning from search
+const urlParams = new URLSearchParams(window.location.search);
+const q = urlParams.get('q');
+if (q) {
+    document.getElementById('searchInput').value = q;
+    setTimeout(function() {
+        document.getElementById('products').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+</script>
+
+<style>
+  #chatToggle {
+    position: fixed; bottom: 28px; right: 28px; z-index: 1100;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #E8470A; color: white;
+    border: none; cursor: pointer; font-size: 26px;
+    box-shadow: 0 4px 20px rgba(232,71,10,0.45);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+  }
+  #chatToggle:hover { background: #C33A06; transform: scale(1.08); }
+
+  #chatWindow {
+    position: fixed; bottom: 96px; right: 28px; z-index: 1100;
+    width: 340px; max-height: 500px;
+    background: white; border-radius: 18px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+    display: none; flex-direction: column;
+    overflow: hidden; font-family: 'DM Sans', sans-serif;
+  }
+  #chatWindow.open { display: flex; animation: chatSlideIn 0.22s ease; }
+  @keyframes chatSlideIn {
+    from { opacity:0; transform: translateY(16px) scale(0.96); }
+    to   { opacity:1; transform: translateY(0)    scale(1); }
+  }
+  .chat-header {
+    background: #1A1A2E; color: white;
+    padding: 14px 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .chat-header-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #E8470A; display: flex; align-items: center;
+    justify-content: center; font-size: 16px; flex-shrink: 0;
+  }
+  .chat-header-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
+  .chat-header-info p  { font-size: 11px; color: #9BA3B8; margin: 2px 0 0; }
+  .chat-close-btn {
+    margin-left: auto; background: none; border: none;
+    color: #9BA3B8; font-size: 18px; cursor: pointer; line-height: 1;
+  }
+  .chat-close-btn:hover { color: white; }
+
+  #chatMessages {
+    flex: 1; overflow-y: auto; padding: 14px 14px 8px;
+    display: flex; flex-direction: column; gap: 8px;
+    background: #faf9f7;
+  }
+  #chatMessages::-webkit-scrollbar { width: 4px; }
+  #chatMessages::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+  .chat-msg {
+    max-width: 82%; padding: 9px 13px; border-radius: 14px;
+    font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+  }
+  .chat-msg.bot  {
+    background: white; color: #2C2C2C;
+    border: 1px solid #ede9e4; align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .chat-msg.user {
+    background: #E8470A; color: white;
+    align-self: flex-end; border-bottom-right-radius: 4px;
+  }
+  .chat-typing {
+    align-self: flex-start; padding: 10px 14px;
+    background: white; border: 1px solid #ede9e4;
+    border-radius: 14px; border-bottom-left-radius: 4px;
+    display: flex; gap: 4px; align-items: center;
+  }
+  .chat-typing span {
+    width: 7px; height: 7px; background: #bbb;
+    border-radius: 50%; animation: typingBounce 1.2s infinite;
+  }
+  .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); }
+    30%          { transform: translateY(-5px); }
+  }
+  .chat-quick-replies {
+    padding: 6px 14px 4px; display: flex; flex-wrap: wrap; gap: 6px;
+    background: #faf9f7;
+  }
+  .chat-quick-btn {
+    background: white; border: 1.5px solid #e0dbd5;
+    color: #2C2C2C; border-radius: 20px; padding: 5px 12px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.18s;
+  }
+  .chat-quick-btn:hover { background: #E8470A; color: white; border-color: #E8470A; }
+  .chat-input-bar {
+    display: flex; padding: 10px 12px; gap: 8px;
+    border-top: 1px solid #ede9e4; background: white;
+  }
+  #chatInput {
+    flex: 1; border: 1.5px solid #e5e7eb; border-radius: 8px;
+    padding: 8px 12px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.2s;
+  }
+  #chatInput:focus { border-color: #E8470A; }
+  #chatSendBtn {
+    background: #E8470A; color: white; border: none;
+    border-radius: 8px; padding: 8px 14px; font-size: 15px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  #chatSendBtn:hover { background: #C33A06; }
+  @media (max-width: 480px) {
+    #chatWindow { width: calc(100vw - 24px); right: 12px; bottom: 80px; }
+    #chatToggle { right: 16px; bottom: 16px; }
+  }
+</style>
+
+<button id="chatToggle" onclick="toggleChat()" title="Chat with Paira Assistant">💬</button>
+
+<div id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-avatar">🛍️</div>
+    <div class="chat-header-info">
+      <h4>Paira Assistant</h4>
+      <p>Ask me anything about products!</p>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+  </div>
+  <div id="chatMessages"></div>
+  <div class="chat-quick-replies">
+    <button class="chat-quick-btn" onclick="sendQuick('bags')">👜 Bags</button>
+    <button class="chat-quick-btn" onclick="sendQuick('shoes')">👟 Shoes</button>
+    <button class="chat-quick-btn" onclick="sendQuick('cheapest')">💰 Cheapest</button>
+    <button class="chat-quick-btn" onclick="sendQuick('top rated')">⭐ Top Rated</button>
+  </div>
+  <div class="chat-input-bar">
+    <input type="text" id="chatInput" placeholder="Ask about products..." autocomplete="off"
+           onkeydown="if(event.key==='Enter') sendChat()">
+    <button id="chatSendBtn" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var chatOpen  = false;
+  var firstOpen = true;
+
+  window.toggleChat = function() {
+    chatOpen = !chatOpen;
+    var win = document.getElementById('chatWindow');
+    var btn = document.getElementById('chatToggle');
+    if (chatOpen) {
+      win.classList.add('open');
+      btn.textContent = '✕'; btn.style.fontSize = '20px';
+      if (firstOpen) {
+        firstOpen = false;
+        appendBot("Hi! 👋 Welcome to <strong>Paira</strong>!\n\nI can help you find bags, shoes & accessories. Try asking:\n• <em>Bags under Rs 3000</em>\n• <em>Top rated shoes</em>\n• <em>Show me all products</em>");
+      }
+      setTimeout(function(){ document.getElementById('chatInput').focus(); }, 120);
+    } else {
+      win.classList.remove('open');
+      btn.textContent = '💬'; btn.style.fontSize = '26px';
+    }
+  };
+
+  window.sendQuick = function(text) {
+    document.getElementById('chatInput').value = text;
+    sendChat();
+  };
+
+  window.sendChat = function() {
+    var input = document.getElementById('chatInput');
+    var msg   = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    appendUser(msg);
+    showTyping();
+    fetch('/chatbot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      removeTyping();
+      var reply = data.reply || "Sorry, I couldn't understand that.";
+      reply = reply.replace(/\[product_id:(\d+)\]/g,
+        '<a href="/product/$1" style="color:#E8470A;font-weight:600;font-size:11px;">View →</a>');
+      appendBot(reply);
+    })
+    .catch(function(){
+      removeTyping();
+      appendBot("Oops! Something went wrong. Please try again.");
+    });
+  };
+
+  function appendUser(text) {
+    var d = document.createElement('div');
+    d.className = 'chat-msg user'; d.textContent = text;
+    msgs().appendChild(d); scroll();
+  }
+  function appendBot(html) {
+    var d = document.createElement('div');
+    d.className = 'chat-msg bot';
+    d.innerHTML = html.replace(/\n/g,'<br>');
+    msgs().appendChild(d); scroll();
+  }
+  function showTyping() {
+    var t = document.createElement('div');
+    t.className = 'chat-typing'; t.id = 'chatTyping';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    msgs().appendChild(t); scroll();
+  }
+  function removeTyping() { var t=document.getElementById('chatTyping'); if(t) t.remove(); }
+  function msgs()  { return document.getElementById('chatMessages'); }
+  function scroll(){ var el=msgs(); el.scrollTop=el.scrollHeight; }
+})();
+</script>
+
+</body>
+</html>

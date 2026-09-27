@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="detail-box">
+    {% if product[3] %}
+    <img src="{{ url_for('static', filename='uploads/' + product[3]) }}"
+        style="width:100%; max-height:340px; object-fit:cover; border-radius:10px; margin-bottom:20px;">
+    {% else %}
+    <div style="width:100%; height:240px; background:linear-gradient(135deg,#f0ede8,#e8e4de);
+                    border-radius:10px; display:flex; align-items:center; justify-content:center;
+                    font-size:60px; margin-bottom:20px;">🛍️</div>
+    {% endif %}
+
+    <div style="display:inline-block; background:rgba(232,71,10,0.1); color:#E8470A;
+                padding:3px 12px; border-radius:20px; font-size:12px; font-weight:600;
+                text-transform:uppercase; margin-bottom:10px;">{{ product[6] }}</div>
+    <h1 style="font-family:'Playfair Display',serif; font-size:28px; color:#1A1A2E; margin-bottom:8px;">{{ product[1] }}
+    </h1>
+    <p style="color:#777; margin-bottom:16px; line-height:1.6;">{{ product[2] }}</p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+        <div style="background:#f8f6f3; border-radius:8px; padding:12px;">
+            <div style="font-size:11px; color:#777; margin-bottom:2px;">SELLER</div>
+            <div style="font-weight:600; color:#1A1A2E;">{{ product[7] }}</div>
+        </div>
+        <div style="background:#f8f6f3; border-radius:8px; padding:12px;">
+            <div style="font-size:11px; color:#777; margin-bottom:2px;">STOCK</div>
+            <div style="font-weight:600; color:#1A1A2E;">{{ product[5] }} units</div>
+        </div>
+        <div style="background:#f8f6f3; border-radius:8px; padding:12px;">
+            <div style="font-size:11px; color:#777; margin-bottom:2px;">RATING</div>
+            <div style="font-weight:600; color:#f59e0b;">⭐ {{ product[8] }} / 5 <span
+                    style="color:#999; font-size:12px;">({{ product[9] }})</span></div>
+        </div>
+        <div style="background:#fff3ee; border-radius:8px; padding:12px;">
+            <div style="font-size:11px; color:#777; margin-bottom:2px;">PRICE</div>
+            <div style="font-size:22px; font-weight:700; color:#E8470A;">Rs {{ product[4] }}</div>
+        </div>
+    </div>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        {% if session.get('role') == 'Customer' %}
+        {% if product[5] > 0 %}
+        <a href="/add_to_cart/{{ product[0] }}" class="btn btn-primary">🛒 Add to Cart</a>
+        {% else %}
+        <span style="background:#eee; color:#999; padding:10px 20px; border-radius:7px; font-weight:600;">Out of
+            Stock</span>
+        {% endif %}
+        <a href="/products" class="btn btn-gray">← Back</a>
+        {% elif session.get('role') == 'Admin' %}
+        <a href="/admin" class="btn btn-gray">← Back to Admin Panel</a>
+        {% elif session.get('role') == 'Seller' %}
+        <a href="/seller" class="btn btn-gray">← Back to Seller Dashboard</a>
+        {% else %}
+        {% if product[5] > 0 %}
+        <button onclick="openLoginPopup('/add_to_cart/{{ product[0] }}')" class="btn btn-primary">🛒 Add to
+            Cart</button>
+        {% endif %}
+        <a href="/" class="btn btn-gray">← Back</a>
+        {% endif %}
+    </div>
+</div>
+
+<h2 style="font-family:'Playfair Display',serif; font-size:22px; color:#1A1A2E; margin-bottom:16px;">Customer Reviews
+</h2>
+{% if reviews %}
+<table>
+    <tr>
+        <th>Customer</th>
+        <th>Rating</th>
+        <th>Review</th>
+        <th>Date</th>
+    </tr>
+    {% for r in reviews %}
+    <tr>
+        <td><strong>{{ r[0] }}</strong></td>
+        <td style="color:#f59e0b; font-weight:600;">⭐ {{ r[1] }} / 5</td>
+        <td style="text-align:left;">{{ r[2] }}</td>
+        <td style="color:#999; font-size:12px;">{{ r[3] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p style="color:#999; padding:20px 0;">No reviews yet. Be the first!</p>
+{% endif %}
+
+{% if session.get('role') not in ['Admin', 'Seller'] %}
+<div class="form-box" style="margin-top:28px; max-width:520px;">
+    <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:18px;">Write a Review</h3>
+    {% if session.get('role') == 'Customer' %}
+    <form method="POST" action="/review/add/{{ product[0] }}">
+    {% else %}
+    <form onsubmit="event.preventDefault(); openLoginPopup('/product/{{ product[0] }}');">
+    {% endif %}
+        <div class="form-group">
+            <label>Rating</label>
+            <select name="rating" class="form-control" required>
+                <option value="">-- Select rating --</option>
+                <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                <option value="4">⭐⭐⭐⭐ (4 - Good)</option>
+                <option value="3">⭐⭐⭐ (3 - Average)</option>
+                <option value="2">⭐⭐ (2 - Poor)</option>
+                <option value="1">⭐ (1 - Terrible)</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+            <label>Your Review</label>
+            <textarea name="review_text" class="form-control" rows="3" placeholder="Share your experience..." required style="resize:vertical;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:12px;">Submit Review</button>
+        {% if not session.get('user_id') %}
+        <p style="color:#999; font-size:12px; margin-top:10px;">You will be asked to log in before submitting your review.</p>
+        {% endif %}
+    </form>
+</div>
+{% endif %}
+
+{% if session.get('role') not in ['Admin', 'Seller'] %}
+
+<div style="margin-top:40px; background:white; border-radius:16px; padding:32px;
+            box-shadow:0 4px 24px rgba(0,0,0,0.08); max-width:680px; margin-left:auto; margin-right:auto;"
+    id="recsSection" data-product-id="{{ product[0] }}">
+    <h2 style="font-family:'Playfair Display',serif; font-size:22px; color:#1A1A2E; margin-bottom:6px;">
+        ✨ You May Also Like
+    </h2>
+    <p style="color:#aaa; font-size:13px; margin-bottom:20px;">Similar products based on category, price, and rating</p>
+    <div id="recsGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px;">
+        <div style="color:#aaa; font-size:13px; grid-column:span 3; text-align:center; padding:20px;">
+            Loading recommendations...
+        </div>
+    </div>
+</div>
+
+<script>
+    // Read product ID from the data attribute set by Jinja2 (avoids VS Code linter warnings)
+    var recsSection = document.getElementById('recsSection');
+    var productId = recsSection.getAttribute('data-product-id');
+
+    fetch('/recommendations/' + productId)
+        .then(function (r) { return r.json(); })
+        .then(function (items) {
+            var grid = document.getElementById('recsGrid');
+            if (!items || items.length === 0) {
+                recsSection.style.display = 'none';
+                return;
+            }
+            var html = '';
+            for (var i = 0; i < items.length; i++) {
+                var p = items[i];
+                var img = p.image_url
+                    ? '<img src="/static/uploads/' + p.image_url + '" style="width:100%;height:120px;object-fit:cover;">'
+                    : '<div style="width:100%;height:120px;background:linear-gradient(135deg,#f0ede8,#e8e4de);display:flex;align-items:center;justify-content:center;font-size:28px;">&#128717;</div>';
+                html += '<a href="/product/' + p.product_id + '" style="text-decoration:none;color:inherit;">'
+                    + '<div style="background:white;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,0.08);transition:transform 0.2s;cursor:pointer;"'
+                    + ' onmouseover="this.style.transform=\'translateY(-4px)\'"'
+                    + ' onmouseout="this.style.transform=\'\'">'
+                    + img
+                    + '<div style="padding:10px;">'
+                    + '<div style="font-size:11px;color:#E8470A;font-weight:700;text-transform:uppercase;margin-bottom:3px;">' + p.category_name + '</div>'
+                    + '<div style="font-size:13px;font-weight:600;color:#1A1A2E;line-height:1.3;margin-bottom:4px;">' + p.name + '</div>'
+                    + '<div style="font-size:11px;color:#f59e0b;margin-bottom:4px;">&#11088; ' + p.avg_rating + '</div>'
+                    + '<div style="font-size:15px;font-weight:700;color:#E8470A;">Rs ' + p.price.toLocaleString() + '</div>'
+                    + '</div>'
+                    + '</div>'
+                    + '</a>';
+            }
+            grid.innerHTML = html;
+        })
+        .catch(function () {
+            recsSection.style.display = 'none';
+        });
+</script>
+{% endif %}
+
+{% endblock %}

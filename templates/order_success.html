@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="success-box">
+    <div style="font-size:56px; margin-bottom:16px;">✅</div>
+    <h2>Order Placed!</h2>
+    <p style="color:#777; margin:8px 0;">Order ID: <strong style="color:#1A1A2E;">#{{ order_id }}</strong></p>
+    <p style="color:#777; margin:8px 0 24px;">Total: <strong style="color:#E8470A; font-size:20px;">Rs {{ total }}</strong></p>
+    <span class="badge badge-green" style="font-size:14px; padding:6px 18px;">Paid ✓</span>
+    <br><br>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="/orders" class="btn btn-dark">📦 View Orders</a>
+        <a href="/products" class="btn btn-gray">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="page-title">My <span>Orders</span></h1>
+<table>
+    <tr><th>Order ID</th><th>Date</th><th>Total</th><th>Status</th><th>Details</th></tr>
+    {% for o in orders %}
+    <tr>
+        <td><strong>#{{ o[0] }}</strong></td>
+        <td style="color:#777;">{{ o[1] }}</td>
+        <td style="font-weight:600; color:#E8470A;">Rs {{ o[2] }}</td>
+        <td><span class="badge badge-green">{{ o[3] }}</span></td>
+        <td><a href="/orders/{{ o[0] }}" class="btn btn-dark btn-sm">View</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" style="color:#999; padding:40px;">No orders yet. <a href="/products" style="color:#E8470A;">Start shopping!</a></td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

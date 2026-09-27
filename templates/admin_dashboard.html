@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">Admin <span>Panel</span></h1>
+
+<h2 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:14px;">
+    👥 All Users
+</h2>
+<table style="margin-bottom:40px;">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+    {% for u in users %}
+    <tr>
+        <td style="color:#999;">#{{ u[0] }}</td>
+        <td style="font-weight:600;">{{ u[1] }}</td>
+        <td>{{ u[2] }}</td>
+        <td><span class="badge">{{ u[3] }}</span></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:14px;">
+    🛍️ All Products
+</h2>
+
+<div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+    <input type="text" id="productSearch" placeholder="🔍 Search by name, seller, category..."
+           oninput="filterProducts()"
+           style="flex:1; min-width:220px; padding:9px 14px; border:2px solid #e5e7eb;
+                  border-radius:8px; font-size:14px; font-family:'DM Sans',sans-serif;
+                  outline:none; transition:border-color 0.2s;"
+           onfocus="this.style.borderColor='#E8470A'"
+           onblur="this.style.borderColor='#e5e7eb'">
+    <select id="stockFilter" onchange="filterProducts()"
+            style="padding:9px 14px; border:2px solid #e5e7eb; border-radius:8px;
+                   font-size:14px; font-family:'DM Sans',sans-serif; outline:none;
+                   background:white; cursor:pointer;">
+        <option value="all">All Stock Status</option>
+        <option value="instock">In Stock</option>
+        <option value="outofstock">Out of Stock</option>
+    </select>
+</div>
+
+<div style="overflow-x:auto; margin-bottom:40px;">
+<table id="productsTable">
+    <tr>
+        <th>Image</th>
+        <th>ID</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Seller</th>
+        <th>Seller Email</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Units Sold</th>
+        <th>Avg Rating</th>
+        <th>Reviews</th>
+        <th>Description</th>
+    </tr>
+    {% for p in products %}
+    {#
+      p[0]  = product_id
+      p[1]  = name
+      p[2]  = description
+      p[3]  = price
+      p[4]  = stock
+      p[5]  = category_name
+      p[6]  = seller name
+      p[7]  = seller email
+      p[8]  = image_url
+      p[9]  = avg_rating
+      p[10] = review_count
+      p[11] = units_sold
+    #}
+    <tr class="product-row"
+        data-name="{{ p[1]|lower }}"
+        data-seller="{{ p[6]|lower }}"
+        data-category="{{ p[5]|lower }}"
+        data-stock="{{ 'instock' if p[4] > 0 else 'outofstock' }}">
+
+        <td>
+            {% if p[8] %}
+                <img src="{{ url_for('static', filename='uploads/' + p[8]) }}"
+                     style="width:54px; height:54px; object-fit:cover; border-radius:8px; display:block;">
+            {% else %}
+                <div style="width:54px; height:54px; background:linear-gradient(135deg,#f0ede8,#e8e4de);
+                            border-radius:8px; display:flex; align-items:center;
+                            justify-content:center; font-size:20px;">🛍️</div>
+            {% endif %}
+        </td>
+
+        <td style="color:#999; font-size:13px;">#{{ p[0] }}</td>
+
+        <td style="font-weight:600; text-align:left; min-width:140px;">
+            <a href="/product/{{ p[0] }}" style="color:#1A1A2E; text-decoration:none;"
+               onmouseover="this.style.color='#E8470A'" onmouseout="this.style.color='#1A1A2E'">
+                {{ p[1] }}
+            </a>
+        </td>
+
+        <td><span class="badge">{{ p[5] }}</span></td>
+
+        <td style="font-weight:600; color:#1A1A2E; white-space:nowrap;">{{ p[6] }}</td>
+
+        <td style="color:#666; font-size:13px;">{{ p[7] }}</td>
+
+        <td style="font-weight:700; color:#E8470A; white-space:nowrap;">Rs {{ p[3] }}</td>
+
+        <td>
+            {% if p[4] > 0 %}
+                <span style="background:rgba(34,197,94,0.12); color:#16a34a; font-weight:600;
+                             padding:3px 10px; border-radius:20px; font-size:12px; white-space:nowrap;">
+                    {{ p[4] }} units
+                </span>
+            {% else %}
+                <span style="background:rgba(220,53,69,0.1); color:#dc3545; font-weight:600;
+                             padding:3px 10px; border-radius:20px; font-size:12px; white-space:nowrap;">
+                    Out of Stock
+                </span>
+            {% endif %}
+        </td>
+
+        <td style="font-weight:600; color:#555;">{{ p[11] }}</td>
+
+        <td style="white-space:nowrap;">
+            {% if p[9] >= 4 %}
+                <span style="color:#16a34a; font-weight:600;">⭐ {{ p[9] }}</span>
+            {% elif p[9] >= 3 %}
+                <span style="color:#f59e0b; font-weight:600;">⭐ {{ p[9] }}</span>
+            {% elif p[9] > 0 %}
+                <span style="color:#dc3545; font-weight:600;">⭐ {{ p[9] }}</span>
+            {% else %}
+                <span style="color:#aaa; font-size:12px;">—</span>
+            {% endif %}
+        </td>
+
+        <td style="color:#777;">{{ p[10] }}</td>
+
+        <td style="text-align:left; min-width:160px; font-size:13px; color:#666;">
+            {% if p[2] %}
+                <span title="{{ p[2] }}">
+                    {{ p[2][:55] }}{% if p[2]|length > 55 %}…{% endif %}
+                </span>
+            {% else %}
+                <span style="color:#bbb; font-style:italic;">No description</span>
+            {% endif %}
+        </td>
+
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="12" style="color:#999; padding:32px; text-align:center;">No products found.</td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+<h2 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:14px;">
+    📦 All Orders
+</h2>
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Date</th>
+        <th>Total</th>
+        <th>Order Items</th>
+        <th>Status</th>
+    </tr>
+    {% for o in orders %}
+    <tr>
+        <td>
+            <a href="/orders/{{ o[0] }}" style="color:#E8470A; font-weight:700; text-decoration:none;">
+                #{{ o[0] }}
+            </a>
+        </td>
+        <td>{{ o[2] }}</td>
+        <td style="color:#777; font-size:13px;">{{ o[3] }}</td>
+        <td style="font-weight:600; color:#E8470A;">Rs {{ o[4] }}</td>
+        <td style="max-width:250px;">
+            <div style="color:#555; font-size:13px;">
+                {{ o[6][:40] if o[6] else '—' }}{% if o[6] and o[6]|length > 40 %}...{% endif %}
+            </div>
+            {% if o[6] %}
+            <button onclick="openModal(`{{ o[6] }}`)"
+                style="margin-top:6px; padding:4px 10px; border:none; background:#E8470A;
+                       color:white; border-radius:4px; cursor:pointer; font-size:12px;">
+                View
+            </button>
+            {% endif %}
+        </td>
+        <td><span class="badge badge-green">{{ o[5] }}</span></td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="6" style="color:#999; padding:32px;">No orders found.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div id="itemModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:999;">
+    <div style="background:white; padding:20px; width:400px; border-radius:8px;
+                max-height:70%; overflow-y:auto; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+        <h3 style="margin-bottom:10px;">Order Items</h3>
+        <div id="modalContent" style="line-height:1.6; color:#444;"></div>
+        <button onclick="closeModal()"
+                style="margin-top:15px; padding:6px 12px; background:#E8470A; color:white;
+                       border:none; border-radius:4px; cursor:pointer;">
+            Close
+        </button>
+    </div>
+</div>
+
+<script>
+// ── ORDER MODAL ──
+function openModal(items) {
+    let content = items.split(',');
+    let html = '';
+    content.forEach(item => {
+        html += "• " + item.trim() + "<br>";
+    });
+    document.getElementById("modalContent").innerHTML = html;
+    document.getElementById("itemModal").style.display = "flex";
+}
+function closeModal() {
+    document.getElementById("itemModal").style.display = "none";
+}
+
+// ── PRODUCT LIVE SEARCH + FILTER ──
+function filterProducts() {
+    var search = document.getElementById('productSearch').value.toLowerCase();
+    var stock  = document.getElementById('stockFilter').value;
+    var rows   = document.querySelectorAll('.product-row');
+    rows.forEach(function(row) {
+        var name     = row.getAttribute('data-name')     || '';
+        var seller   = row.getAttribute('data-seller')   || '';
+        var category = row.getAttribute('data-category') || '';
+        var stockVal = row.getAttribute('data-stock')    || '';
+        function oneEditAway(a, b) {
+            if (Math.abs(a.length - b.length) > 1) return false;
+            if (a.length === b.length) {
+                var differences = 0;
+                for (var i = 0; i < a.length; i++) {
+                    if (a[i] !== b[i] && ++differences > 1) return false;
+                }
+                return true;
+            }
+            if (a.length > b.length) {
+                var temp = a; a = b; b = temp;
+            }
+            var i = 0, j = 0, differences = 0;
+            while (i < a.length && j < b.length) {
+                if (a[i] === b[j]) {
+                    i++; j++;
+                } else {
+                    if (++differences > 1) return false;
+                    j++;
+                }
+            }
+            return true;
+        }
+
+        function fuzzyFieldMatch(query, field) {
+            if (!query || field.includes(query)) return true;
+            var queryWords = query.match(/[a-z0-9]+/g) || [];
+            var fieldWords = field.match(/[a-z0-9]+/g) || [];
+            return queryWords.every(function(qWord) {
+                return fieldWords.some(function(fieldWord) {
+                    return qWord.length >= 3 && fieldWord.length >= 3 &&
+                           oneEditAway(qWord, fieldWord);
+                });
+            });
+        }
+
+        var matchSearch = !search ||
+            fuzzyFieldMatch(search, name) ||
+            fuzzyFieldMatch(search, seller) ||
+            fuzzyFieldMatch(search, category);
+        var matchStock = stock === 'all' || stockVal === stock;
+        row.style.display = (matchSearch && matchStock) ? '' : 'none';
+    });
+}
+</script>
+
+{% endblock %}

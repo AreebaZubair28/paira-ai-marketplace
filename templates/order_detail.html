@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width:680px; margin:0 auto;">
+    <h1 class="page-title">Order <span>#{{ order[0] }}</span></h1>
+    <div style="background:white; border-radius:14px; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,0.07); margin-bottom:24px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div><span style="font-size:12px; color:#777;">DATE</span><br><strong>{{ order[1] }}</strong></div>
+            <div><span style="font-size:12px; color:#777;">TOTAL</span><br><strong style="color:#E8470A; font-size:20px;">Rs {{ order[2] }}</strong></div>
+            <div><span style="font-size:12px; color:#777;">STATUS</span><br><span class="badge badge-green">{{ order[3] }}</span></div>
+        </div>
+    </div>
+    <h3 style="font-family:'Playfair Display',serif; font-size:18px; margin-bottom:14px;">Items</h3>
+    <table>
+        <tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr>
+        {% for item in items %}
+        <tr>
+            <td style="font-weight:600; text-align:left;">{{ item[0] }}</td>
+            <td>{{ item[1] }}</td>
+            <td>Rs {{ item[2] }}</td>
+            <td style="color:#E8470A; font-weight:600;">Rs {{ item[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/orders" class="btn btn-gray">← Back to Orders</a>
+</div>
+{% endblock %}

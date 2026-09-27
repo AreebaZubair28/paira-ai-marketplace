@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-card">
+    <h2>Edit Product</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" name="name" class="form-control" value="{{ product[1] }}" required>
+        </div>
+        <div class="form-group">
+            <label>Price (Rs)</label>
+            <input type="number" name="price" class="form-control" value="{{ product[2] }}" required step="0.01">
+        </div>
+        <div class="form-group">
+            <label>Stock</label>
+            <input type="number" name="stock" class="form-control" value="{{ product[3] }}" required>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="3">{{ product[4] }}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <select name="category_id" class="form-control" required>
+                {% for cat in categories %}
+                    <option value="{{ cat[0] }}" {% if cat[0] == product[5] %}selected{% endif %}>{{ cat[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Current Image</label><br>
+            {% if product[6] %}
+                <img src="{{ url_for('static', filename='uploads/' + product[6]) }}"
+                     style="width:100px; border-radius:8px; margin:8px 0;" id="currentImg">
+                <br>
+                <label style="color:#dc3545; cursor:pointer; font-size:13px;">
+                    <input type="checkbox" name="remove_image" value="1"
+                           onchange="document.getElementById('currentImg').style.opacity=this.checked?'0.3':'1'">
+                    &nbsp;Remove current image
+                </label>
+            {% else %}
+                <span style="color:#999; font-size:13px;">No image uploaded</span>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label>Upload New Image (optional)</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+        <div style="display:flex; gap:12px; margin-top:8px;">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="/seller" class="btn btn-gray">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

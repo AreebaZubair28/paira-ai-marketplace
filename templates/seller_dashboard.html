@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="page-title">Seller <span>Dashboard</span></h1>
+
+<div class="stats-bar">
+    <div class="stat-card"><h3>{{ stats[0] }}</h3><p>Products Listed</p></div>
+    <div class="stat-card"><h3>Rs {{ stats[1] }}</h3><p>Total Sales</p></div>
+    <div class="stat-card"><h3>⭐ {{ stats[2] }}</h3><p>Avg Rating</p></div>
+</div>
+
+<div style="margin-bottom:20px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+    <a href="/add_product" class="btn btn-primary">+ Add New Product</a>
+
+    <form action="/seller" method="GET"
+          style="display:flex; gap:8px; align-items:center; flex:1; max-width:600px; flex-wrap:wrap;">
+        <input type="text" name="search_name"
+               value="{{ search_name }}"
+               placeholder="Search by product name..."
+               style="flex:1; min-width:160px; padding:9px 14px; border:2px solid #e5e7eb;
+                      border-radius:8px; font-size:14px; font-family:'DM Sans',sans-serif;
+                      outline:none; transition:border-color 0.2s;"
+               onfocus="this.style.borderColor='#E8470A'"
+               onblur="this.style.borderColor='#e5e7eb'">
+        <select name="search_category"
+                style="padding:9px 14px; border:2px solid #e5e7eb; border-radius:8px;
+                       font-size:14px; font-family:'DM Sans',sans-serif; outline:none;
+                       background:white; cursor:pointer; transition:border-color 0.2s;"
+                onfocus="this.style.borderColor='#E8470A'"
+                onblur="this.style.borderColor='#e5e7eb'">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat[1] }}"
+                    {% if search_category and search_category.lower() == cat[1].lower() %}selected{% endif %}>
+                    {{ cat[1] }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary" style="padding:9px 20px;">🔍 Search</button>
+        {% if search_name or search_category %}
+            <a href="/seller" class="btn btn-gray" style="padding:9px 16px;">✕ Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+{% if search_name or search_category %}
+<p style="color:#777; font-size:13px; margin-bottom:12px;">
+    Showing results for
+    {% if search_name %}<strong>"{{ search_name }}"</strong>{% endif %}
+    {% if search_category %}in category <strong>{{ search_category }}</strong>{% endif %}
+    — {{ products|length }} product(s) found
+</p>
+{% endif %}
+
+<table>
+    <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Units Sold</th><th>Rating</th><th>Actions</th></tr>
+    {% for p in products %}
+    <tr>
+        <td>
+            {% if p[6] %}
+                <img src="{{ url_for('static', filename='uploads/' + p[6]) }}"
+                     style="width:56px; height:56px; object-fit:cover; border-radius:8px;">
+            {% else %}
+                <div style="width:56px; height:56px; background:#f0ede8; border-radius:8px;
+                            display:flex; align-items:center; justify-content:center; font-size:20px;">🛍️</div>
+            {% endif %}
+        </td>
+        <td style="font-weight:600;">{{ p[1] }}</td>
+        <td><span class="badge">{{ p[4] }}</span></td>
+        <td style="color:#E8470A; font-weight:600;">Rs {{ p[2] }}</td>
+        <td>{{ p[3] }}</td>
+        <td>{{ p[5] }}</td>
+        <td>
+            {% if p[7] >= 4 %}<span style="color:#16a34a; font-weight:600;">⭐ {{ p[7] }}</span>
+            {% elif p[7] == 3 %}<span style="color:#f59e0b; font-weight:600;">⭐ {{ p[7] }}</span>
+            {% else %}<span style="color:#dc3545; font-weight:600;">⭐ {{ p[7] }}</span>{% endif %}
+            <span style="color:#999; font-size:11px;"> ({{ p[8] }})</span>
+        </td>
+        <td>
+            <a href="/edit_product/{{ p[0] }}" class="btn btn-dark btn-sm">Edit</a>
+            &nbsp;
+            <a href="/delete_product/{{ p[0] }}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Delete this product?')">Delete</a>
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" style="color:#999; padding:32px;">No products yet. <a href="/add_product" style="color:#E8470A;">Add your first product!</a></td></tr>
+    {% endfor %}
+</table>
+
+<br>
+<h2 style="font-family:'Playfair Display',serif; font-size:22px; color:#1A1A2E; margin:28px 0 16px;">Customer Reviews</h2>
+{% if reviews %}
+<table>
+    <tr><th>Product</th><th>Customer</th><th>Rating</th><th>Review</th><th>Date</th></tr>
+    {% for r in reviews %}
+    <tr>
+        <td style="font-weight:600;">{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>
+            {% if r[2] >= 4 %}<span style="color:#16a34a; font-weight:600;">⭐ {{ r[2] }}</span>
+            {% elif r[2] == 3 %}<span style="color:#f59e0b; font-weight:600;">⭐ {{ r[2] }}</span>
+            {% else %}<span style="color:#dc3545; font-weight:600;">⭐ {{ r[2] }}</span>{% endif %}
+        </td>
+        <td style="text-align:left;">{{ r[3] }}</td>
+        <td style="color:#999; font-size:12px;">{{ r[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p style="color:#999;">No reviews yet on your products.</p>
+{% endif %}
+
+<br>
+<h2 style="font-family:'Playfair Display',serif; font-size:22px; color:#1A1A2E; margin:28px 0 16px;">📦 Orders for My Products</h2>
+{% if seller_orders %}
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Buyer</th>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Subtotal</th>
+        <th>Status</th>
+    </tr>
+    {% for o in seller_orders %}
+    <tr>
+        <td><strong>#{{ o[0] }}</strong></td>
+        <td style="color:#777; font-size:13px;">{{ o[1] }}</td>
+        <td style="font-weight:600;">{{ o[2] }}</td>
+        <td style="text-align:left;">{{ o[3] }}</td>
+        <td>{{ o[4] }}</td>
+        <td>Rs {{ o[5] }}</td>
+        <td style="font-weight:600; color:#E8470A;">Rs {{ o[6] }}</td>
+        <td><span class="badge badge-green">{{ o[7] }}</span></td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p style="color:#999;">No orders for your products yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local/runtime files
+*.log
+instance/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

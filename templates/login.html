@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex; align-items:center; justify-content:center; min-height:60vh;">
+<div style="background:white; border-radius:20px; padding:40px; width:100%; max-width:400px;
+            box-shadow:0 8px 40px rgba(0,0,0,0.12);">
+
+    <div style="text-align:center; margin-bottom:24px;">
+        <div style="font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:#1A1A2E;">
+            Pair<span style="color:#E8470A;">a</span>
+        </div>
+        <p style="color:#777; font-size:14px; margin-top:6px;">Login to your account</p>
+    </div>
+
+    {% if error %}
+    <div style="background:#fff0f0; border:1px solid #fca5a5; color:#dc2626; padding:10px 14px;
+                border-radius:8px; font-size:13px; margin-bottom:16px;">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+        <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+        <div style="margin-bottom:14px;">
+            <input type="email" name="email" placeholder="Email address" required
+                   style="width:100%; padding:11px 14px; border:2px solid #e5e7eb; border-radius:8px;
+                          font-size:14px; font-family:'DM Sans',sans-serif; outline:none; box-sizing:border-box;"
+                   onfocus="this.style.borderColor='#E8470A'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div style="margin-bottom:20px;">
+            <input type="password" name="password" placeholder="Password" required
+                   style="width:100%; padding:11px 14px; border:2px solid #e5e7eb; border-radius:8px;
+                          font-size:14px; font-family:'DM Sans',sans-serif; outline:none; box-sizing:border-box;"
+                   onfocus="this.style.borderColor='#E8470A'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <button type="submit"
+                style="width:100%; padding:12px; background:#E8470A; color:white; border:none;
+                       border-radius:8px; font-size:15px; font-weight:600; cursor:pointer;
+                       font-family:'DM Sans',sans-serif; transition:background 0.2s;"
+                onmouseover="this.style.background='#C33A06'"
+                onmouseout="this.style.background='#E8470A'">Login</button>
+    </form>
+
+    <p style="text-align:center; margin-top:18px; font-size:14px; color:#777;">
+        No account? <a href="/register" style="color:#E8470A; font-weight:600; text-decoration:none;">Sign up free</a>
+    </p>
+    <p style="text-align:center; margin-top:8px;">
+        <a href="/" style="color:#aaa; font-size:12px; text-decoration:none;">← Back to homepage</a>
+    </p>
+</div>
+</div>
+{% endblock %}
