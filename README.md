@@ -2,6 +2,26 @@
 
 Paira is a role-based online marketplace developed as a team coursework project across Database Systems and Artificial Intelligence. The original application used Oracle; this restored version uses PostgreSQL on Supabase while preserving the marketplace and AI-focused features.
 
+## Screenshots
+
+### Marketplace
+![Paira Marketplace](screenshots/marketplace.JPG)
+
+### AI Shopping Assistant
+![Paira AI Shopping Assistant](screenshots/ai-assistant.png)
+
+### Customer Experience
+![Paira Customer Marketplace](screenshots/customer-marketplace.png)
+
+### Seller Dashboard
+![Paira Seller Dashboard](screenshots/seller-dashboard1.JPG)
+![](screenshots/seller-dashboard2.JPG)
+
+### Admin Panel
+![Paira Admin Panel](screenshots/admin-panel_users.png)
+![](screenshots/admin-panel_product.JPG)
+![](screenshots/admin-panel_orders.JPG)
+
 ## Features
 
 - **Guest:** Browse products, search, view reviews and recommendations, and use the shopping assistant
@@ -87,6 +107,7 @@ paira-ai-marketplace/
 ├── app.py
 ├── templates/
 ├── static/
+├── screenshots/
 ├── supabase_schema.sql
 ├── security_migration.sql
 ├── requirements.txt
@@ -100,14 +121,6 @@ This was a team coursework project. **Areeba Zubair's contribution** included re
 
 The repository presents the complete team project while distinguishing individual contribution rather than claiming sole authorship.
 
-## Notes
-
-- The Flask backend connects directly to PostgreSQL over SSL.
-- Customer shopping actions are restricted to Customer accounts.
-- Seller product-management routes are restricted to Seller accounts and seller-owned products.
-- Admin pages are restricted to Admin accounts.
-- Product deletion preserves product names in historical order details.
-
 ## Future Improvements
 
 - Integrate an LLM-powered shopping assistant for more natural and context-aware conversations
@@ -117,3 +130,11 @@ The repository presents the complete team project while distinguishing individua
 - Add email notifications for orders and account activity
 - Improve security with CSRF protection, rate limiting, and hardened session management
 - Add automated testing and a production deployment pipeline
+
+## Notes
+
+- The Flask backend connects directly to PostgreSQL over SSL.
+- Customer shopping actions are restricted to Customer accounts.
+- Seller product-management routes are restricted to Seller accounts and seller-owned products.
+- Admin pages are restricted to Admin accounts.
+- Product deletion preserves product names in historical order details.
